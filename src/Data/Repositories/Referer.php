@@ -45,6 +45,9 @@ class Referer extends Repository {
 	 */
 	public function store($refererUrl, $host, $domain_id)
 	{
+		if(!$host){
+			return null;
+		}
 		$attributes = array(
 			'url' => $refererUrl,
 			'host' => $host,

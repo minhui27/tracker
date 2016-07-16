@@ -107,7 +107,7 @@ class Session extends Repository {
 
         foreach ($this->sessionInfo as $key => $value)
         {
-            if ($sessionData[$key] !== $value)
+            if ($key!=='user_agent' && $sessionData[$key] !== $value)
             {
                 if ( ! isset($model))
                 {
