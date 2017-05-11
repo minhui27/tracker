@@ -32,6 +32,8 @@ use PragmaRX\Tracker\Services\Authentication;
 use PragmaRX\Tracker\Support\CrawlerDetector;
 use PragmaRX\Tracker\Support\LanguageDetect;
 use PragmaRX\Tracker\Support\MobileDetect;
+use PragmaRX\Support\PhpSession;
+
 class RepositoryManager implements RepositoryManagerInterface
 {
     /**
@@ -152,8 +154,10 @@ class RepositoryManager implements RepositoryManagerInterface
         SystemClass $systemClassRepository,
         CrawlerDetector $crawlerDetector,
         Language $languageRepository,
-        LanguageDetect $languageDetect
+        LanguageDetect $languageDetect,
+        PhpSession $phpSession
     ) {
+        $this->mobile_user_id = $phpSession->get('mobile_user_id');
         $this->authentication = $authentication;
         $this->mobileDetect = $mobileDetect;
         $this->userAgentParser = $userAgentParser;
@@ -291,7 +295,13 @@ class RepositoryManager implements RepositoryManagerInterface
     }
     public function getCurrentUserId()
     {
-        return $this->authentication->getCurrentUserId();
+        $user_id = $this->authentication->getCurrentUserId();
+        if(is_null($user_id)){
+            if(!is_null($this->mobile_user_id)){
+                $user_id = $this->mobile_user_id;
+            }
+        }
+        return $user_id;
     }
     /**
      * @return array

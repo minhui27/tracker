@@ -225,7 +225,8 @@ class ServiceProvider extends PragmaRXServiceProvider
                 $systemClassRepository,
                 $crawlerDetect,
                 new Language($languageModel),
-                new LanguageDetect()
+                new LanguageDetect(),
+                new PhpSession()
             );
         });
     }

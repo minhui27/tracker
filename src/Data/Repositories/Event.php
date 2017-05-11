@@ -70,13 +70,16 @@ class Event extends Repository
         if ($evenId) {
             $objectName = $this->getObjectName($event);
             $classId = $this->getClassId($objectName);
-            $this->eventLogRepository->create(
-                [
-                    'log_id'   => $this->logRepository->getCurrentLogId(),
-                    'event_id' => $evenId,
-                    'class_id' => $classId,
-                ]
-            );
+
+            if($this->logRepository->getCurrentLogId()){
+				$this->eventLogRepository->create(
+					array(
+						'log_id'   => $this->logRepository->getCurrentLogId(),
+						'event_id' => $evenId,
+						'class_id' => $classId,
+					)
+				);
+			}
         }
     }
     private function getObject($object)
