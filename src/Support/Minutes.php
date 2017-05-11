@@ -1,26 +1,20 @@
 <?php
-
 namespace PragmaRX\Tracker\Support;
-
 use Carbon\Carbon;
-
 class Minutes
 {
     /**
      * @var
      */
     private $minutes;
-
     /**
      * @var
      */
     private $start;
-
     /**
      * @var
      */
     private $end;
-
     /**
      * Minutes constructor.
      *
@@ -31,18 +25,14 @@ class Minutes
         if (!isset($minutes)) {
             return;
         }
-
         $this->minutes = $minutes;
-
         if ($minutes instanceof self) {
             $this->start = $minutes->getStart();
-
             $this->end = $minutes->getEnd();
         } else {
             $this->calculateStartEnd();
         }
     }
-
     /**
      * Calculate start and end dates.
      */
@@ -52,11 +42,9 @@ class Minutes
             $this->setToday();
         } else {
             $this->start = Carbon::now()->subMinutes($this->minutes);
-
             $this->end = Carbon::now();
         }
     }
-
     /**
      * @return mixed
      */
@@ -64,7 +52,6 @@ class Minutes
     {
         return $this->end;
     }
-
     /**
      * @return mixed
      */
@@ -72,7 +59,6 @@ class Minutes
     {
         return $this->minutes;
     }
-
     /**
      * @return mixed
      */
@@ -80,7 +66,6 @@ class Minutes
     {
         return $this->start;
     }
-
     /**
      * @param $minutes
      *
@@ -90,7 +75,6 @@ class Minutes
     {
         return new static($minutes);
     }
-
     /**
      * @param mixed $end
      */
@@ -98,7 +82,6 @@ class Minutes
     {
         $this->end = $end;
     }
-
     /**
      * @param mixed $start
      */
@@ -106,14 +89,12 @@ class Minutes
     {
         $this->start = $start;
     }
-
     /**
      * Today.
      */
     private function setToday()
     {
         $this->start = Carbon::now()->setTime(0, 0, 0);
-
         $this->end = Carbon::now()->setTime(23, 59, 59);
     }
 }

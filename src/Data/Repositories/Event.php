@@ -1,37 +1,29 @@
 <?php
-
 namespace PragmaRX\Tracker\Data\Repositories;
-
 use PragmaRX\Support\Config;
 use PragmaRX\Tracker\Eventing\EventStorage;
-
 class Event extends Repository
 {
     /**
      * @var EventLog
      */
     private $eventLogRepository;
-
     /**
      * @var SystemClass
      */
     private $systemClassRepository;
-
     /**
      * @var Log
      */
     private $logRepository;
-
     /**
      * @var \PragmaRX\Support\Config
      */
     private $config;
-
     /**
      * @var \PragmaRX\Tracker\Eventing\EventStorage
      */
     private $eventStorage;
-
     public function __construct(
         $model,
         EventStorage $eventStorage,
@@ -41,62 +33,43 @@ class Event extends Repository
         Config $config
     ) {
         parent::__construct($model);
-
         $this->eventStorage = $eventStorage;
-
         $this->eventLogRepository = $eventLogRepository;
-
         $this->systemClassRepository = $systemClassRepository;
-
         $this->logRepository = $logRepository;
-
         $this->config = $config;
     }
-
     public function logEvents()
     {
         if (!$this->logRepository->getCurrentLogId()) {
             return;
         }
-
         foreach ($this->eventStorage->popAll() as $event) {
             if ($this->isLoggableEvent($event)) {
                 $this->logEvent($event);
             }
         }
     }
-
     private function isLoggableEvent($event)
     {
         $forbidden = $this->config->get('do_not_log_events');
-
         // Illuminate Query may cause infinite recursion
         $forbidden[] = 'illuminate.query';
-
         return
             $event['event'] != $this->getObject($event['object'])
-
             &&
-
             !in_array_wildcard($event['event'], $forbidden)
-
             &&
-
             !$this->config->get('log_only_events')
                 || in_array($event['event'], $this->config->get('log_only_events'));
     }
-
     public function logEvent($event)
     {
         $event = $this->makeEventArray($event);
-
         $evenId = $this->getEventId($event);
-
         if ($evenId) {
             $objectName = $this->getObjectName($event);
-
             $classId = $this->getClassId($objectName);
-
             $this->eventLogRepository->create(
                 [
                     'log_id'   => $this->logRepository->getCurrentLogId(),
@@ -106,7 +79,6 @@ class Event extends Repository
             );
         }
     }
-
     private function getObject($object)
     {
         if (is_object($object)) {
@@ -114,15 +86,12 @@ class Event extends Repository
         } elseif (is_array($object)) {
             $object = serialize($object);
         }
-
         return $object;
     }
-
     public function getAll($minutes, $results)
     {
         return $this->getModel()->allInThePeriod($minutes, $results);
     }
-
     /**
      * Get the object name from an event.
      *
@@ -136,7 +105,6 @@ class Event extends Repository
             ? $this->getObject($event['object'])
             : null;
     }
-
     /**
      * Get the system class id by object name.
      *
@@ -153,7 +121,6 @@ class Event extends Repository
             )
             : null;
     }
-
     /**
      * Get the event id.
      *
@@ -170,7 +137,6 @@ class Event extends Repository
                 )
             : null;
     }
-
     private function makeEventArray($event)
     {
         if (is_string($event)) {
@@ -179,7 +145,6 @@ class Event extends Repository
                 'object' => null,
             ];
         }
-
         return $event;
     }
 }

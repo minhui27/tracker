@@ -80,7 +80,13 @@ abstract class Repository implements RepositoryInterface
             }
         }
 
-        $model->save();
+        try{
+        	$model->save();
+		} catch(\Exception $e) {
+			if($model->exists()){
+				$model->first();
+			}
+		}
 
         return $model;
     }

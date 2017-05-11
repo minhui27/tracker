@@ -1,9 +1,6 @@
 <?php
-
 namespace PragmaRX\Tracker\Vendor\Laravel;
-
 use Illuminate\Support\Facades\Facade as IlluminateFacade;
-
 class Facade extends IlluminateFacade
 {
     /**
